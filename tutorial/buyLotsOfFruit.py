@@ -27,14 +27,17 @@ fruitPrices = {'apples':2.00, 'oranges': 1.50, 'pears': 1.75,
               'limes':0.75, 'strawberries':1.00}
 
 def buyLotsOfFruit(orderList):
-    """
-        orderList: List of (fruit, numPounds) tuples
+	"""
+		orderList: List of (fruit, numPounds) tuples
 
-    Returns cost of order
-    """
-    totalCost = 0.0
-    "*** YOUR CODE HERE ***"
-    return totalCost
+	Returns cost of order
+	"""
+	totalCost = 0.0
+	"*** YOUR CODE HERE ***"
+	for x in orderList:
+		if x[0] in fruitPrices:
+			totalCost += x[1]*fruitPrices[x[0]]
+	return totalCost
 
 # Main Method
 if __name__ == '__main__':
