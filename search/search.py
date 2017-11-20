@@ -76,7 +76,7 @@ def tinyMazeSearch(problem):
     return  [s, s, w, s, w, w, s, w]
     
 def DFS(states, p):
-	for s in states:
+	for s in states[::-1]:
 		if s[0] in closeList or s is None:
 			continue
 		if p.isGoalState(s[0]):
@@ -141,12 +141,44 @@ def depthFirstSearch(problem):
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
+    '''
+	Quan fiques, es posa a sota.
+	Quan consultes, treu el primer.
+	
+	Exemple: A|B|C
+	Mentre queu No Buit:
+	Pop A
+	Analitzar A -> en cas de ja haber-lo vist Seguent iteracio
+	Si A Es Final:
+	BackTrack -> Com es pot lincar en el pare?
+	Altrament:
+	Push de tots els fill d'A -> B|C D|E|F
+	Posar A Vist
+	'''
     util.raiseNotDefined()
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    
+    start = problem.getStartState()
+	closeList.add(start)
+	
+	queu = utils.Queue
+	
+	for s in queu.pop:
+		if s[0] in closeList or s is None:
+			continue
+		if p.isGoalState(s[0]):
+			output.append(s[1])
+			return
+		closeList.add(s[0])
+		DFS(p.getSuccessors(s[0]), p)
+		if output:
+			output.append(s[1])
+			return
+    
+    return output[::-1]
 
 def nullHeuristic(state, problem=None):
     """
