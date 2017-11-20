@@ -19,6 +19,9 @@ Pacman agents (in searchAgents.py).
 
 import util
 
+output = []										# Vector de direcccions [s, s, w, s, w, w, s, w]
+closeList = set()								# Un Set normal
+
 class SearchProblem:
     """
     This class outlines the structure of a search problem, but doesn't implement
@@ -71,6 +74,19 @@ def tinyMazeSearch(problem):
     s = Directions.SOUTH
     w = Directions.WEST
     return  [s, s, w, s, w, w, s, w]
+    
+def DFS(states, p):
+	for s in states:
+		if s[0] in closeList or s is None:
+			continue
+		if p.isGoalState(s[0]):
+			output.append(s[1])
+			return
+		closeList.add(s[0])
+		DFS(p.getSuccessors(s[0]), p)
+		if output:
+			output.append(s[1])
+			return
 
 def depthFirstSearch(problem):
 	"""
@@ -81,23 +97,46 @@ def depthFirstSearch(problem):
 
 	To get started, you might want to try some of these simple commands to
 	understand the search problem that is being passed in:
-
-	"""
+	
 	print "Start:", problem.getStartState()
 	print "Is the start a goal?", problem.isGoalState(problem.getStartState())
 	print "Start's successors:", problem.getSuccessors(problem.getStartState())
-	"*** YOUR CODE HERE ***"
+
+	"""
+	'''
+	Quan fiques, es posa a sobre.
+	Quan consultes, treu el primer.
 	
-	stack = utils.Stack()
-	closeList = set()
-	start = (problem.getStartState(), None, None)
-	output = []
+	Exemple: A|B|C
+	Mentre stack No Buit:
+	Pop A
+	Analitzar A -> en cas de ja haber-lo vist Seguent iteracio
+	Si A Es Final:
+	BackTrack -> Com es pot lincar en el pare?
+	Altrament:
+	Push de tots els fill d'A -> D|E|F B|C
+	Posar A Vist
+	'''
+	
+	'''
+	stack = utils.Stack()							 
+	start = (problem.getStartState(), None, None)	# ((x, y), direccio, cost)
 	stack.push(start)
 	
 	while not stack.isEmpy():
 		
 	
 	util.raiseNotDefined()
+	'''
+	
+	"*** YOUR CODE HERE ***"
+	
+	start = problem.getStartState()
+	closeList.add(start)
+	
+	DFS(problem.getSuccessors(start), problem)
+	
+	return output[::-1]
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
