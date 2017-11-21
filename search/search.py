@@ -132,6 +132,8 @@ def depthFirstSearch(problem):
 		
 	return DFS(problem.getSuccessors(start), problem, closeList)
 
+def DFS(states, problem, closeList):
+
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
