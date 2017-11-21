@@ -19,9 +19,6 @@ Pacman agents (in searchAgents.py).
 
 import util
 
-output = []										# Vector de direcccions [s, s, w, s, w, w, s, w]
-closeList = set()								# Un Set normal
-
 class SearchProblem:
     """
     This class outlines the structure of a search problem, but doesn't implement
@@ -75,18 +72,16 @@ def tinyMazeSearch(problem):
     w = Directions.WEST
     return  [s, s, w, s, w, w, s, w]
     
-def DFS(states, p):
+def DFS(states, problem, closeList):
 	for s in states[::-1]:
 		if s[0] in closeList or s is None:
 			continue
-		if p.isGoalState(s[0]):
-			output.append(s[1])
-			return
+		if problem.isGoalState(s[0]):
+			return [s[1]]
 		closeList.add(s[0])
-		DFS(p.getSuccessors(s[0]), p)
-		if output:
-			output.append(s[1])
-			return
+		a = DFS(problem.getSuccessors(s[0]), problem, closeList)
+		if a:
+			return [s[1]] + a
 
 def depthFirstSearch(problem):
 	"""
@@ -131,12 +126,11 @@ def depthFirstSearch(problem):
 	
 	"*** YOUR CODE HERE ***"
 	
+	closeList = set()				# Un Set normal
 	start = problem.getStartState()
 	closeList.add(start)
-	
-	DFS(problem.getSuccessors(start), problem)
-	
-	return output[::-1]
+		
+	return DFS(problem.getSuccessors(start), problem, closeList)
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
@@ -160,7 +154,7 @@ def breadthFirstSearch(problem):
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    
+    '''
     start = problem.getStartState()
 	closeList.add(start)
 	
@@ -177,7 +171,7 @@ def uniformCostSearch(problem):
 		if output:
 			output.append(s[1])
 			return
-    
+    '''
     return output[::-1]
 
 def nullHeuristic(state, problem=None):
