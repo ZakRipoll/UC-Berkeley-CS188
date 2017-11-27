@@ -1,4 +1,3 @@
-# search.py
 # ---------
 # Licensing Information:  You are free to use or extend these projects for
 # educational purposes provided that (1) you do not distribute or publish
@@ -73,15 +72,15 @@ def tinyMazeSearch(problem):
     return  [s, s, w, s, w, w, s, w]
 
 def DFS(states, problem, closeList):
-	for s in states[::-1]:
-		if s[0] in closeList or s is None:
+	for state in states[::-1]:
+		if state[0] in closeList or state is None:
 			continue
-		if problem.isGoalState(s[0]):
-			return [s[1]]
-		closeList.add(s[0])
-		a = DFS(problem.getSuccessors(s[0]), problem, closeList)
-		if a:
-			return [s[1]] + a
+		if problem.isGoalState(state[0]):
+			return [state[1]]
+		closeList.add(state[0])
+		_list = DFS(problem.getSuccessors(state[0]), problem, closeList)
+		if _list:
+			return [state[1]] + _list
 
 def depthFirstSearch(problem):
 	"""
@@ -132,6 +131,25 @@ def depthFirstSearch(problem):
 
 	return DFS(problem.getSuccessors(start), problem, closeList)
 
+def BFS(states, problem, closeList):
+    dictionary = {}
+    childs = []
+    for state in states[::-1]:
+    	if state[0] in closeList or state is None:
+    		continue
+    	if problem.isGoalState(state[0]):
+    		return state[0], [state[1]]
+        for child in problem.getSuccessors(state[0]):
+            childs.append(child)
+            dictionary[child[0]] = (state[0], state[1])
+        closeList.add(state[0])
+    state, _list = BFS(childs, problem, closeList)
+    if _list:
+        state = dictionary[state]
+        if state[1] is None:
+            return _list
+        return state[0], [state[1]] + _list
+
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
@@ -148,32 +166,36 @@ def breadthFirstSearch(problem):
 	Altrament:
 	Push de tots els fill d'A -> B|C D|E|F
 	Posar A Vist
+    Marc (actual, (parent, (grandpa, (..., (n*[grand]pa)...))))
+    Zac Map ;)
+    Mirar de fer el map
 	'''
     start = (problem.getStartState(), None, None)
 
     closeList = set()
-    output =  []
-    queue = util.Queue()
 
-    queue.push(start)
-
-    while not queue.isEmpty():
-        state = queue.pop()
-        if state in closeList or state[0] is None:
-            continue
-        if problem.isGoalState(state[0]):
-            while state[1]:
-                output.append(state[1])
-                for parent in closeList:
-                    if parent[0][0] == state[2][0] and parent[0][1] == state[2][1]:
-                        state = parent
-                        break
-            break
-        for child in problem.getSuccessors(state[0]):
-            queue.push((child[0], child[1], state[0]))
-        closeList.add(state)
-
-    return output[::-1]
+    if 0:
+        output = []
+        queue = util.Queue()
+        dictionary = {}
+        queue.push(start)
+        while not queue.isEmpty():
+            state = queue.pop()
+            if state[0] in closeList or state[0] is None:
+                continue
+            if problem.isGoalState(state[0]):
+                while state[1]:
+                    output.append(state[1])
+                    state = dictionary[state[0]]
+                break
+            for child in problem.getSuccessors(state[0]):
+                queue.push((child[0], child[1], state))
+                if(child[0] not in closeList):
+                    dictionary[child[0]] = (state[0], state[1])
+            closeList.add(state[0])
+        return output[::-1]
+    else:
+        return BFS([start], problem, closeList)
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
