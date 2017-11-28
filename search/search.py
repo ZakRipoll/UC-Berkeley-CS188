@@ -73,7 +73,7 @@ def tinyMazeSearch(problem):
 
 def DFS(states, problem, closeList):
 	for state in states[::-1]:
-		if state[0] in closeList or state is None:
+		if state[0] in closeList:
 			continue
 		if problem.isGoalState(state[0]):
 			return [state[1]]
@@ -125,22 +125,20 @@ def depthFirstSearch(problem):
 
 	"*** YOUR CODE HERE ***"
 
-	closeList = set()				# Un Set normal
 	start = problem.getStartState()
-	closeList.add(start)
 
-	return DFS(problem.getSuccessors(start), problem, closeList)
+	return DFS(problem.getSuccessors(start), problem, set())
 
 def BFS(states, problem, closeList):
     dictionary = {}
     childs = []
     for state in states[::-1]:
-    	if state[0] in closeList or state is None:
+    	if state[0] in closeList:
     		continue
     	if problem.isGoalState(state[0]):
     		return state[0], [state[1]]
         for child in problem.getSuccessors(state[0]):
-            childs.append(child)
+            childs.append((child[0], child[1]))
             dictionary[child[0]] = (state[0], state[1])
         closeList.add(state[0])
     state, _list = BFS(childs, problem, closeList)
@@ -170,18 +168,19 @@ def breadthFirstSearch(problem):
     Zac Map ;)
     Mirar de fer el map
 	'''
-    start = (problem.getStartState(), None, None)
-
-    closeList = set()
+    start = (problem.getStartState(), None)
 
     if 0:
+
+        closeList = set()
         output = []
         queue = util.Queue()
         dictionary = {}
         queue.push(start)
+
         while not queue.isEmpty():
             state = queue.pop()
-            if state[0] in closeList or state[0] is None:
+            if state[0] in closeList:
                 continue
             if problem.isGoalState(state[0]):
                 while state[1]:
@@ -189,35 +188,44 @@ def breadthFirstSearch(problem):
                     state = dictionary[state[0]]
                 break
             for child in problem.getSuccessors(state[0]):
-                queue.push((child[0], child[1], state))
-                if(child[0] not in closeList):
-                    dictionary[child[0]] = (state[0], state[1])
+                queue.push((child[0], child[1]))
+                if child[0] in closeList:
+                    continue
+                dictionary[child[0]] = (state[0], state[1])
             closeList.add(state[0])
+
         return output[::-1]
-    else:
-        return BFS([start], problem, closeList)
+
+    return BFS([start], problem, set())
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    '''
-    start = problem.getStartState()
-	closeList.add(start)
 
-	queu = utils.Queue
+    start = (problem.getStartState(), None, 0)
+    closeList = set()
+    output = []
+    priorityQueue = util.PriorityQueue()
+    dictionary = {}
+    priorityQueue.push(start, 0)
 
-	for s in queu.pop:
-		if s[0] in closeList or s is None:
-			continue
-		if p.isGoalState(s[0]):
-			output.append(s[1])
-			return
-		closeList.add(s[0])
-		DFS(p.getSuccessors(s[0]), p)
-		if output:
-			output.append(s[1])
-			return
-    '''
+    while not priorityQueue.isEmpty():
+        state = priorityQueue.pop()
+        if state[0] in closeList:
+            continue
+        if problem.isGoalState(state[0]):
+            while state[1]:
+                output.append(state[1])
+                state = dictionary[state[0]]
+            break
+        for child in problem.getSuccessors(state[0]):
+            if child[0] in closeList:
+                continue
+            restul = child[2] + state[2]
+            priorityQueue.push((child[0], child[1], restul), restul)
+            dictionary[child[0]] = (state[0], state[1])
+        closeList.add(state[0])
+
     return output[::-1]
 
 def nullHeuristic(state, problem=None):
