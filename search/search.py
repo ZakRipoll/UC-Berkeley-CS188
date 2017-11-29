@@ -97,6 +97,7 @@ def depthFirstSearch(problem):
 	print "Start's successors:", problem.getSuccessors(problem.getStartState())
 
 	"""
+	"*** YOUR CODE HERE ***"
 	'''
 	Quan fiques, es posa a sobre.
 	Quan consultes, treu el primer.
@@ -110,9 +111,7 @@ def depthFirstSearch(problem):
 	Altrament:
 	Push de tots els fill d'A -> D|E|F B|C
 	Posar A Vist
-	'''
 
-	'''
 	stack = utils.Stack()
 	start = (problem.getStartState(), None, None)	# ((x, y), direccio, cost)
 	stack.push(start)
@@ -122,9 +121,6 @@ def depthFirstSearch(problem):
 
 	util.raiseNotDefined()
 	'''
-
-	"*** YOUR CODE HERE ***"
-
 	start = problem.getStartState()
 
 	return DFS(problem.getSuccessors(start), problem, set())
@@ -133,14 +129,14 @@ def BFS(states, problem, closeList):
     dictionary = {}
     childs = []
     for state in states[::-1]:
-    	if state[0] in closeList:
-    		continue
     	if problem.isGoalState(state[0]):
     		return state[0], [state[1]]
         for child in problem.getSuccessors(state[0]):
+            if child[0] in closeList:
+            	continue
             childs.append((child[0], child[1]))
             dictionary[child[0]] = (state[0], state[1])
-        closeList.add(state[0])
+            closeList.add(child[0])
     state, _list = BFS(childs, problem, closeList)
     if _list:
         state = dictionary[state]
@@ -169,64 +165,46 @@ def breadthFirstSearch(problem):
     Mirar de fer el map
 	'''
     start = (problem.getStartState(), None)
+    closeList = set()
+    closeList.add(start[0])
 
     if 0:
 
-        closeList = set()
         output = []
         queue = util.Queue()
-        dictionary = {}
         queue.push(start)
 
         while not queue.isEmpty():
             state = queue.pop()
-            if state[0] in closeList:
-                continue
             if problem.isGoalState(state[0]):
                 while state[1]:
                     output.append(state[1])
-                    state = dictionary[state[0]]
+                    state = state[2]
                 break
             for child in problem.getSuccessors(state[0]):
-                queue.push((child[0], child[1]))
                 if child[0] in closeList:
                     continue
-                dictionary[child[0]] = (state[0], state[1])
-            closeList.add(state[0])
+                queue.push((child[0], child[1], state))
+                closeList.add(child[0])
 
         return output[::-1]
 
-    return BFS([start], problem, set())
+    return BFS([start], problem, closeList)
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-
-    start = (problem.getStartState(), None, 0)
-    closeList = set()
-    output = []
-    priorityQueue = util.PriorityQueue()
-    dictionary = {}
-    priorityQueue.push(start, 0)
-
-    while not priorityQueue.isEmpty():
-        state = priorityQueue.pop()
-        if state[0] in closeList:
-            continue
-        if problem.isGoalState(state[0]):
-            while state[1]:
-                output.append(state[1])
-                state = dictionary[state[0]]
-            break
-        for child in problem.getSuccessors(state[0]):
-            if child[0] in closeList:
-                continue
-            restul = child[2] + state[2]
-            priorityQueue.push((child[0], child[1], restul), restul)
-            dictionary[child[0]] = (state[0], state[1])
-        closeList.add(state[0])
-
-    return output[::-1]
+    '''
+        1      1      1
+    *A ---> B ---> C ---> [G]
+     |                     ^
+     |         10          |
+     \---------------------/
+    No es pot fer com el BFS, ja que expandeix A -> B|G
+    i si es fa amb els childs, c no pot expandir C -> G
+    Degut a que ja esta en la close list i no hi arriba
+    '''
+    return aStarSearch(problem)
 
 def nullHeuristic(state, problem=None):
     """
@@ -238,8 +216,27 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    start = (problem.getStartState(), None, 0)
+    closeList = set()
+    output = []
+    priorityQueue = util.PriorityQueue()
+    priorityQueue.push(start, 0)
 
+    while not priorityQueue.isEmpty():
+        state = priorityQueue.pop()
+        if state[0] in closeList:
+            continue
+        if problem.isGoalState(state[0]):
+            while state[1]:
+                output.append(state[1])
+                state = state[3]
+            break
+        for child in problem.getSuccessors(state[0]):
+            result = child[2] + state[2]
+            priorityQueue.push((child[0], child[1], result, state), result + heuristic(child[0], problem))
+        closeList.add(state[0])
+
+    return output[::-1]
 
 # Abbreviations
 bfs = breadthFirstSearch
