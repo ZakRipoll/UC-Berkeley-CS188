@@ -288,6 +288,7 @@ class CornersProblem(search.SearchProblem):
         # Please add any code here which you would like to use
         # in initializing the problem
         "*** YOUR CODE HERE ***"
+        self.visited = 0
 
     def getStartState(self):
         """
@@ -295,14 +296,16 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
-        return self.start
+        return self.startingPosition
 
     def isGoalState(self, state):
         """
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
-        return state[1].count() == 0
+        if state in self.corners:
+            self.visited+=1
+        return self.visited == 4
 
     def getSuccessors(self, state):
         """
@@ -315,6 +318,7 @@ class CornersProblem(search.SearchProblem):
             is the incremental cost of expanding to that successor
         """
 
+        x,y = state
         successors = []
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
             # Add a successor state to the successor list if the action is legal
@@ -325,13 +329,14 @@ class CornersProblem(search.SearchProblem):
             #   hitsWall = self.walls[nextx][nexty]
 
             "*** YOUR CODE HERE ***"
-            
-            x,y = state[0]
             dx,dy = Actions.directionToVector(action)
             nextx,nexty = int(x+dx), int(y+dy)
-            if self.walls[nextx][nexty]:
-				continue
-			successors.append(((nextx, nexty), action, 1))
+            if self.walls[nextx][nexty]: 
+                continue
+            '''
+                Es pot donar la solucio que fa amb les fruites de posar-ho com a part de l'State
+            '''
+            successors.append( ( (nextx, nexty), action, 1) )
 
         self._expanded += 1 # DO NOT CHANGE
         return successors
