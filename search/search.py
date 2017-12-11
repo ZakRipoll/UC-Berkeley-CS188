@@ -165,10 +165,10 @@ def breadthFirstSearch(problem):
     Mirar de fer el map
 	'''
     start = (problem.getStartState(), None)
-    closeList = set()
-    closeList.add(start[0])
 
-    if 0:
+    if 1:
+        closeList = []
+        closeList.append(start[0])
 
         output = []
         queue = util.Queue()
@@ -185,9 +185,12 @@ def breadthFirstSearch(problem):
                 if child[0] in closeList:
                     continue
                 queue.push((child[0], child[1], state))
-                closeList.add(child[0])
+                closeList.append(child[0])
 
         return output[::-1]
+    
+    closeList = set()
+    closeList.add(start[0])
 
     return BFS([start], problem, closeList)
 
