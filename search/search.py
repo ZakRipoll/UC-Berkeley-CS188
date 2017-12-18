@@ -220,7 +220,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
     start = (problem.getStartState(), None, 0)
-    closeList = set()
+    closeList = []
     output = []
     priorityQueue = util.PriorityQueue()
     priorityQueue.push(start, 0)
@@ -237,7 +237,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
         for child in problem.getSuccessors(state[0]):
             result = child[2] + state[2]
             priorityQueue.push((child[0], child[1], result, state), result + heuristic(child[0], problem))
-        closeList.add(state[0])
+        closeList.append(state[0])
 
     return output[::-1]
 
