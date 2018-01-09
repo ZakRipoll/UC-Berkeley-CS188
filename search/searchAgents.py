@@ -374,8 +374,8 @@ def cornersHeuristic(state, problem):
     #De buscar el cami mes curt fins al proxim corner i del seguent cap a l'altre
     #Manhattan distance
 
-    for state in state[1]:
-        corners.remove(state)
+    for staterm in state[1]:
+        corners.remove(staterm)
 
     return heuristiCorner(corners, state[0])
 
