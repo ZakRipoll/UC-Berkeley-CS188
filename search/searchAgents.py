@@ -377,12 +377,11 @@ def cornersHeuristic(state, problem):
     for state in state[1]:
         corners.remove(state)
 
-    if len(corners):
-        return heuristiCorner(corners, state[0])
+    return heuristiCorner(corners, state[0])
 
 def heuristiCorner(corners, actual):
-    if len(corners) == 1:
-        return util.manhattanDistance(actual,corners.pop())
+    if len(corners) == 0 || actual[1] == None:
+        return 0
 
     distance = 999999
     act = actual
@@ -394,7 +393,7 @@ def heuristiCorner(corners, actual):
             act = corner
 
     corners.remove(act)
-    return heuristiCorner(corners, act) + distance
+    return distance + heuristiCorner(corners, act)
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
