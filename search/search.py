@@ -165,10 +165,11 @@ def breadthFirstSearch(problem):
     Mirar de fer el map
 	'''
     start = (problem.getStartState(), None)
-    closeList = set()
-    closeList.add(start[0])
 
-    if 0:
+    if 1:
+        closeList = []
+        closeList.append(start[0])
+
         output = []
         queue = util.Queue()
         queue.push(start)
@@ -184,9 +185,12 @@ def breadthFirstSearch(problem):
                 if child[0] in closeList:
                     continue
                 queue.push((child[0], child[1], state))
-                closeList.add(child[0])
+                closeList.append(child[0])
 
         return output[::-1]
+    
+    closeList = set()
+    closeList.add(start[0])
 
     return BFS([start], problem, closeList)
 
@@ -216,7 +220,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
     start = (problem.getStartState(), None, 0)
-    closeList = set()
+    closeList = []
     output = []
     priorityQueue = util.PriorityQueue()
     priorityQueue.push(start, 0)
@@ -233,7 +237,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
         for child in problem.getSuccessors(state[0]):
             result = child[2] + state[2]
             priorityQueue.push((child[0], child[1], result, state), result + heuristic(child[0], problem))
-        closeList.add(state[0])
+        closeList.append(state[0])
 
     return output[::-1]
 
