@@ -489,7 +489,19 @@ def foodHeuristic(state, problem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
-    return heuristiCorner(foodGrid.asList(), position)
+
+    if problem.isGoalState(state):
+        return 0
+
+    dist = distance = 999999
+
+    for i in range(len(foodGrid.asList())):
+        fruita = foodGrid.asList()
+        dist = util.manhattanDistance(position, fruita[i]) + heuristiCorner(fruita, fruita.pop(i))
+        if dist < distance:
+            distance = dist
+
+    return distance
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
