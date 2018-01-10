@@ -380,20 +380,22 @@ def cornersHeuristic(state, problem):
     return heuristiCorner(corners, state[0])
 
 def heuristiCorner(corners, actual):
-    if not len(corners):
+
+    _len = len(corners)
+
+    if not _len:
         return 0
 
-    distance = 999999
-    act = actual
+    distance = util.manhattanDistance(actual,corners[0])
+    act = 0
 
-    for corner in corners:
-        manhatan = util.manhattanDistance(actual,corner)
+    for i in range(1, _len):
+        manhatan = util.manhattanDistance(actual,corners[i])
         if manhatan < distance:
             distance = manhatan
-            act = corner
+            act = i
 
-    corners.remove(act)
-    return distance + heuristiCorner(corners, act)
+    return distance + heuristiCorner(corners, corners.pop(act))
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
