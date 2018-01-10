@@ -380,7 +380,7 @@ def cornersHeuristic(state, problem):
     return heuristiCorner(corners, state[0])
 
 def heuristiCorner(corners, actual):
-    if len(corners) == 0 || actual[1] == None:
+    if len(corners) == 0:
         return 0
 
     distance = 999999
