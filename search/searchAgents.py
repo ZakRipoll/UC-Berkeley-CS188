@@ -380,7 +380,7 @@ def cornersHeuristic(state, problem):
     return heuristiCorner(corners, state[0])
 
 def heuristiCorner(corners, actual):
-    if len(corners) == 0:
+    if not len(corners):
         return 0
 
     distance = 999999
@@ -487,7 +487,7 @@ def foodHeuristic(state, problem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
-    return 0
+    return heuristiCorner(foodGrid.asList(), position)
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
