@@ -169,7 +169,6 @@ def breadthFirstSearch(problem):
     closeList.add(start[0])
 
     if 0:
-
         output = []
         queue = util.Queue()
         queue.push(start)
